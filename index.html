@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JD Roadmap Generator | Powered by Exa</title>
+    
+    <!-- Load Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- Base & Typography --- */
+        :root {
+            --text-primary: #ffffff;
+            --text-secondary: #ffffff99;
+            --text-tertiary: #ffffffcc;
+            --text-blue: #a5cfff;
+            --text-green: #a7f3d0;
+            --text-red: #fca5a5;
+            --text-yellow: #fde047;
+            --text-purple: #d8b4fe;
+            --text-dark: #1f2937;
+            
+            --bg-blue-light: #3b82f633;
+            --border-blue-light: #3b82f666;
+            --bg-green-light: #10b98133;
+            --border-green-light: #10b98166;
+            --bg-red-light: #ef444433;
+            --border-red-light: #ef444466;
+            
+            --bg-purple-light: #8b5cf633;
+            --border-purple-light: #8b5cf666;
+            --bg-yellow-light: #f59e0b33;
+            --border-yellow-light: #f59e0b66;
+
+            --brand-blue: #3b82f6;
+            --brand-purple: #8b5cf6;
+            --brand-pink: #ec4899;
+            --brand-yellow: #f59e0b;
+            --brand-orange: #f97316;
+            --brand-green: #10b981;
+            
+            --border-color: #ffffff26;
+            --radius-md: 0.5rem; /* 8px */
+            --radius-lg: 1rem; /* 16px */
+            --radius-xl: 1.5rem; /* 24px */
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Fallback */
+            background-image: linear-gradient(140deg, #0f172a, #1e1b4b, #4c1d95);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* --- Animated Background --- */
+        .bg-blurs {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bg-blurs div {
+            position: absolute;
+            border-radius: 9999px;
+            mix-blend-mode: multiply;
+            filter: blur(80px);
+            opacity: 0.2;
+            animation: float 10s infinite ease-in-out;
+        }
+        .blur-1 { top: -10rem; right: -10rem; width: 20rem; height: 20rem; background-color: var(--brand-purple); }
+        .blur-2 { bottom: -10rem; left: -10rem; width: 20rem; height: 20rem; background-color: var(--brand-blue); animation-delay: 2s; }
+        .blur-3 { top: 10rem; left: 10rem; width: 20rem; height: 20rem; background-color: var(--brand-pink); animation-delay: 4s; }
+
+
+        /* --- Glassmorphism --- */
+        .glass {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border-color: #ffffff55;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 64rem; /* 1024px */
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .header-logo .icon-bg {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(to_bottom_right, var(--brand-yellow), var(--brand-orange), var(--brand-pink));
+            box-shadow: var(--shadow-lg);
+        }
+        .header-logo h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .header-logo p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-md);
+        }
+        .header-status i {
+            color: var(--brand-green);
+        }
+        .header-status span {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        .hero .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            margin-bottom: 1.5rem;
+        }
+        .hero .hero-badge i { color: var(--text-yellow); }
+        .hero .hero-badge span { font-size: 0.875rem; font-weight: 500; }
+        .hero h2 {
+            font-size: 3rem; /* 48px */
+            font-weight: 800;
+            line-height: 1.2;
+            margin: 0 0 1.5rem 0;
+        }
+        .hero h2 span {
+            background-image: linear-gradient(to right, var(--brand-yellow), var(--brand-orange), var(--brand-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .hero p {
+            font-size: 1.125rem; /* 18px */
+            color: var(--text-secondary);
+            max-width: 42rem; /* 672px */
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* --- Example Jobs --- */
+        .examples-section {
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.5s ease-out 0.2s;
+            animation-fill-mode: backwards;
+        }
+        .examples-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+        }
+        .examples-header i { color: var(--brand-green); }
+        .examples-header h3 { font-size: 1.125rem; font-weight: 600; margin: 0; }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        @media (max-width: 800px) {
+            .examples-grid { grid-template-columns: 1fr; }
+        }
+        
+        .example-card {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .example-card .card-icon {
+            height: 14rem;
+            transition: transform 0.5s ease;
+            overflow: hidden; /* Keep image from spilling out */
+        }
+        .example-card .card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* This makes the image cover the area */
+            transition: transform 0.5s ease;
+        }
+        .example-card:hover .card-icon img { /* Apply hover to the img */
+            transform: scale(1.1);
+        }
+
+        .example-card .card-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+        .example-card .card-content h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+        }
+        .example-card .card-content .card-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: #e5e7eb;
+            color: #374151;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 9999px;
+            margin-bottom: 0.75rem;
+        }
+        .example-card .card-content p {
+            font-size: 0.875rem;
+            color: #4b5563;
+            line-height: 1.6;
+            margin: 0;
+            /* line-clamp: 2 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .example-card .card-content button {
+            width: 100%;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+        .example-card .card-content button:hover { opacity: 0.9; }
+        
+        /* Card-specific colors */
+        .card-ds .card-icon { background-color: #eff6ff; }
+        .card-ds .card-content button { background-color: #3b82f6; }
+        .card-fe .card-icon { background-color: #ecfeff; }
+        .card-fe .card-content button { background-color: #3b82f6; }
+        .card-fs .card-icon { background-color: #fefce8; }
+        .card-fs .card-content button { background-color: #3b82f6; }
+
+        /* --- Input Form --- */
+        .input-form {
+            animation: fadeInUp 0.5s ease-out 0.4s;
+            animation-fill-mode: backwards;
+            margin-bottom: 3rem;
+        }
+        .input-form .form-box {
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-2xl);
+        }
+        .form-box .form-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-header i { color: var(--text-blue); }
+        .form-header label { font-size: 1.125rem; font-weight: 600; }
+        
+        .form-box textarea {
+            width: 100%;
+            height: 12rem; /* 192px */
+            padding: 1rem 1.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            resize: none;
+            box-sizing: border-box;
+        }
+        .form-box textarea::placeholder { color: #ffffff80; }
+        .form-box textarea:focus {
+            outline: none;
+            border-color: var(--brand-blue);
+            box-shadow: 0 0 0 2px #3b82f666;
+        }
+
+        .form-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        .form-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .form-status .char-count { font-size: 0.875rem; color: var(--text-secondary); }
+        .form-status .ready-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--text-green);
+        }
+        .form-status .ready-badge i { width: 1rem; height: 1rem; }
+        .form-status .ready-badge span { font-size: 0.875rem; }
+        
+        button#generate-btn {
+            padding: 0.75rem 1.5rem;
+            background-image: linear-gradient(to right, var(--brand-blue), var(--brand-purple), var(--brand-pink));
+            color: white;
+            font-weight: 600;
+            border-radius: var(--radius-lg);
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        button#generate-btn:hover {
+            box-shadow: 0 0 20px #8b5cf680;
+        }
+        button#generate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        button#generate-btn .spinner {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #ffffff50;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        /* --- Loader --- */
+        #loader {
+            padding: 2rem;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        #loader .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ffffff30;
+            border-top-color: var(--brand-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem auto;
+        }
+        
+        /* --- Message Box --- */
+        #message-box {
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: var(--radius-lg);
+            font-weight: 500;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            animation: fadeInUp 0.3s ease-out;
+        }
+        #message-box.error {
+            background-color: var(--bg-red-light);
+            color: var(--text-red);
+            border: 1px solid var(--border-red-light);
+        }
+        #message-box.error i { margin-top: 0.125rem; }
+        #message-box.error h3 { margin: 0 0 0.25rem 0; color: white; }
+
+        .hidden { display: none; }
+
+        /* --- Results Section --- */
+        #results-container {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .results-header .context-badge {
+            padding: 0.75rem 2rem;
+            background-image: linear-gradient(to right, var(--brand-green), var(--brand-blue));
+            border-radius: 9999px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+        }
+        .results-header .icon-btn {
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .results-header .icon-btn:hover { background-color: #ffffff20; }
+        
+        .tabs-nav {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            border-radius: var(--radius-lg);
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .tabs-nav button {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            background-color: #ffffff1a;
+            color: var(--text-tertiary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tabs-nav button:hover {
+            background-color: #ffffff33;
+            color: var(--text-primary);
+        }
+        .tabs-nav button.active {
+            background-color: var(--brand-blue);
+            color: var(--text-primary);
+        }
+        
+        .result-box {
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-2xl);
+            margin-bottom: 2rem;
+        }
+        .result-box h3.box-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .result-box h3.box-title i { color: var(--text-blue); }
+
+        /* Skills Overview */
+        .skills-overview {
+        }
+        .skills-overview .category {
+            margin-bottom: 1.5rem;
+        }
+        .skills-overview h4 {
+            font-weight: 600;
+            color: var(--text-tertiary);
+            margin: 0 0 1rem 0;
+            font-size: 1.125rem;
+        }
+        .skills-overview .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .skills-overview .skill-badge {
+            padding: 0.5rem 1rem;
+            background-color: var(--bg-blue-light);
+            border: 1px solid var(--border-blue-light);
+            color: var(--text-blue);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        /* Roadmap Tab */
+        .roadmap-step {
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        .roadmap-step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .step-number {
+            width: 3.5rem;
+            height: 3.5rem;
+            flex-shrink: 0;
+            background-image: linear-gradient(to bottom right, var(--brand-yellow), var(--brand-orange));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step-number span { font-size: 1.875rem; font-weight: 800; color: white; }
+        .step-title h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            text-transform: capitalize;
+        }
+        .step-title p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 0.25rem 0 0 0;
+        }
+        .step-icon {
+            margin-left: auto;
+            width: 4rem;
+            height: 4rem;
+            flex-shrink: 0;
+            border-radius: 9999px;
+            background-color: var(--bg-blue-light);
+            border: 1px solid var(--border-blue-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step-icon i { color: var(--text-blue); width: 2rem; height: 2rem; }
+
+        .progress-bar { margin-bottom: 1.5rem; }
+        .progress-bar .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .progress-labels span { font-size: 0.75rem; color: var(--text-secondary); }
+        .progress-labels span.percent { font-weight: 500; color: var(--text-blue); }
+        .progress-track {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #ffffff1a;
+            border-radius: 9999px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .progress-fill {
+            height: 100%;
+            background-image: linear-gradient(to right, var(--brand-blue), var(--brand-purple));
+            transition: width 1s ease-out;
+        }
+
+        .resources-list h5 {
+            color: var(--text-tertiary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin: 0 0 1rem 0;
+        }
+        .resources-list .resource-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: #ffffff0d;
+            border: 1px solid #ffffff1a;
+            border-radius: var(--radius-lg);
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        .resources-list .resource-card:hover {
+            border-color: #ffffff4d;
+            background-color: #ffffff1a;
+        }
+        .resource-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            flex-shrink: 0;
+            background-color: var(--bg-blue-light);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.125rem;
+        }
+        .resource-details { flex: 1; min-width: 0; }
+        .resource-details h6 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 0.25rem 0;
+            line-height: 1.4;
+            /* line-clamp: 2 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .resource-details p {
+            display: none; 
+        }
+        .resource-tags { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+            flex-wrap: wrap; 
+            margin-top: 0.5rem; 
+        }
+        .resource-tags .tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+        .tag-type { background-color: var(--bg-green-light); color: var(--text-green); }
+        .tag-host { background-color: var(--bg-blue-light); color: var(--text-blue); }
+        
+        .resource-action {
+            padding: 0.5rem 0.75rem;
+            background-color: var(--bg-blue-light);
+            border: 1px solid var(--border-blue-light);
+            border-radius: var(--radius-md);
+            color: var(--text-blue);
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            margin-left: 0.5rem;
+        }
+        .resource-action:hover { background-color: #3b82f666; }
+        
+        .step-connector {
+            margin: -1.5rem 0;
+            padding: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step-connector .connector-icon {
+            width: 2rem;
+            height: 2rem;
+            background-image: linear-gradient(to bottom, var(--brand-purple), var(--brand-pink));
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        .empty-state i { width: 3rem; height: 3rem; opacity: 0.2; margin-bottom: 0.75rem; }
+        
+        /* Timeline Tab */
+        .timeline-item { margin-bottom: 1.5rem; }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        .timeline-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .timeline-title span.skill { font-weight: 700; text-transform: capitalize; }
+        .timeline-title span.weeks { font-size: 0.875rem; color: var(--text-secondary); }
+        .timeline-duration {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-green);
+        }
+        .timeline-track {
+            height: 2rem;
+            background-color: #ffffff1a;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .timeline-fill {
+            height: 100%;
+            background-image: linear-gradient(to right, var(--brand-blue), var(--brand-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .timeline-summary {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: var(--bg-green-light);
+            border: 1px solid var(--border-green-light);
+            border-radius: var(--radius-lg);
+        }
+        .timeline-summary p {
+            color: var(--text-green);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        .timeline-summary p span { font-weight: 700; }
+        
+        /* Difficulty Tab */
+        .difficulty-item {
+            padding: 1.5rem;
+            background-color: #ffffff0d;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+        .difficulty-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        .difficulty-header span.skill { font-weight: 700; font-size: 1.125rem; text-transform: capitalize; }
+        .difficulty-header span.badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+        }
+        .badge-easy { background-image: linear-gradient(to right, #10b981, #34d399); }
+        .badge-medium { background-image: linear-gradient(to right, #f59e0b, #facc15); }
+        .badge-hard { background-image: linear-gradient(to right, #ef4444, #f87171); }
+        
+        .difficulty-track {
+            width: 100%;
+            height: 0.75rem;
+            background-color: #ffffff1a;
+            border-radius: 9999px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-top: 1rem;
+        }
+        .difficulty-fill {
+            height: 100%;
+            transition: width 1s ease-out;
+        }
+        .fill-easy { background-image: linear-gradient(to right, #10b981, #34d399); }
+        .fill-medium { background-image: linear-gradient(to right, #f59e0b, #facc15); }
+        .fill-hard { background-image: linear-gradient(to right, #ef4444, #f87171); }
+
+        .difficulty-details {
+            margin-top: 1.25rem;
+        }
+        .difficulty-details h5 {
+            font-weight: 600;
+            color: var(--text-tertiary);
+            margin: 0 0 0.5rem 0;
+            font-size: 0.875rem;
+        }
+        .difficulty-details p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0 0 1rem 0;
+        }
+        .difficulty-details ul {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+        .difficulty-details li {
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Styles for new tabs */
+        .info-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background-color: #ffffff0d;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+        .info-card:hover {
+            border-color: #ffffff4d;
+            background-color: #ffffff1a;
+        }
+        .info-card-icon {
+            width: 3rem;
+            height: 3rem;
+            flex-shrink: 0;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .info-card-icon.icon-project { background-color: var(--bg-green-light); color: var(--text-green); }
+        .info-card-icon.icon-interview { background-color: var(--bg-yellow-light); color: var(--text-yellow); }
+        
+        .info-card-details { flex: 1; min-width: 0; }
+        .info-card-details h4 {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 0.5rem 0;
+            line-height: 1.4;
+            text-transform: capitalize;
+            font-size: 1.25rem;
+        }
+        .info-card-details h4 small {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-left: 0.5rem;
+        }
+        .info-card-details .resource-link {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: #ffffff0d;
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
+            border: 1px solid #ffffff1a;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        .info-card-details .resource-link:hover {
+            background-color: #ffffff1a;
+        }
+        .resource-link .link-details { flex: 1; min-width: 0; }
+        .resource-link .link-details h6 {
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            line-height: 1.4;
+            /* line-clamp: 2 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .resource-link .link-details .link-host {
+            font-size: 0.875rem;
+            color: var(--text-blue);
+            margin: 0;
+        }
+        .resource-link .link-action {
+            margin-left: auto;
+            padding-left: 1rem;
+        }
+        .resource-link .link-action i {
+            color: var(--text-secondary);
+        }
+        
+        /* --- NEW: Key Concepts Tab Styles --- */
+        .concept-item {
+            padding: 1.5rem;
+            background-color: #ffffff0d;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+        .concept-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .concept-header h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            text-transform: capitalize;
+        }
+        .concept-header button {
+            padding: 0.5rem 1rem;
+            background-color: var(--bg-blue-light);
+            border: 1px solid var(--border-blue-light);
+            color: var(--text-blue);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .concept-header button:hover { background-color: #3b82f666; }
+        .concept-header button .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid #a5cfff50;
+            border-top-color: var(--text-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .concept-body {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .concept-body p {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            line-height: 1.7;
+            margin: 0;
+        }
+        .concept-body p.error {
+            color: var(--text-red);
+            font-style: italic;
+        }
+        /* --- End of Key Concepts Styles --- */
+
+        /* Summary Card */
+        .summary-card {
+            margin-top: 2rem;
+            border: 1px solid var(--border-green-light);
+            background-image: linear-gradient(to bottom right, #10b9811a, transparent);
+        }
+        .summary-card h3.box-title i { color: var(--text-green); }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        @media (max-width: 600px) {
+            .summary-grid { grid-template-columns: 1fr; }
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: 1rem;
+            background-color: #ffffff0d;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+        .summary-item p.value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin: 0;
+        }
+        .summary-item p.label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0 0;
+        }
+        .summary-item p.value-skills { color: var(--text-green); }
+        .summary-item p.value-resources { color: var(--text-blue); }
+        .summary-item p.value-weeks { color: var(--text-purple); }
+        
+        .summary-card p.summary-text {
+            color: var(--text-tertiary);
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            border-top: 1px solid var(--border-color);
+            margin-top: 5rem;
+        }
+        footer .container {
+            text-align: center;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        footer .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        footer .footer-logo i { color: var(--text-yellow); }
+        footer .footer-logo span { font-weight: 600; }
+        footer p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background -->
+    <div class="bg-blurs">
+        <div class="blur-1"></div>
+        <div class="blur-2"></div>
+        <div class="blur-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="glass">
+        <div class="container">
+            <div class="header-logo">
+                <div class="icon-bg">
+                    <i data-lucide="sparkles" style="color: white; width: 1.25rem; height: 1.25rem;"></i>
+                </div>
+                <div>
+                    <h3>Learning Path Generator</h3>
+                    <p>Powered by Exa AI • Semantic Search</p>
+                </div>
+            </div>
+            <div class="header-status glass">
+                <i data-lucide="clock" style="width: 1rem; height: 1rem;"></i>
+                <span id="remaining-searches">5 searches left</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-badge glass">
+                <i data-lucide="star" style="width: 1rem; height: 1rem;"></i>
+                <span>AI-Powered Career Development</span>
+            </div>
+            <h2>
+                Transform Job Descriptions into 
+                <span>Personalized Learning Paths</span>
+            </h2>
+            <p>
+                Paste any job description and get curated learning resources with interactive visualizations powered by Exa AI's semantic search.
+            </p>
+        </div>
+
+        <!-- Example Jobs -->
+        <div class="examples-section">
+            <div class="examples-header">
+                <i data-lucide="target" style="width: 1.5rem; height: 1.5rem;"></i>
+                <h3>Try these popular roles:</h3>
+            </div>
+            
+            <div class="examples-grid">
+                <div class="example-card card-hover card-ds" data-example-id="ds">
+                    <div class="card-icon">
+                        <img src="public\data-science.jpg" alt="Data Scientist icon" 
+                             onerror="this.src='https://placehold.co/600x400/eff6ff/3b82f6?text=Data+Science'">
+                    </div>
+                    <div class="card-content">
+                        <div>
+                            <h4>Data Scientist</h4>
+                            <span class="card-badge">Python • ML • SQL</span>
+                            <p>We're looking for a Data Scientist with experience in Python, machine learning, and SQL. You'll work on building predictive models...</p>
+                        </div>
+                        <button>Try Now</button>
+                    </div>
+                </div>
+                <div class="example-card card-hover card-fe" data-example-id="fe">
+                    <div class="card-icon">
+                         <img src="public\frontend.jpg" alt="Frontend Developer icon"
+                              onerror="this.src='https://placehold.co/600x400/ecfeff/06b6d4?text=Frontend+Dev'">
+                    </div>
+                    <div class="card-content">
+                        <div>
+                            <h4>Frontend Developer</h4>
+                            <span class="card-badge">React • JavaScript • CSS</span>
+                            <p>Join our team as a Frontend Developer! You'll build responsive web applications using React, JavaScript, and TypeScript...</p>
+                        </div>
+                        <button>Try Now</button>
+                    </div>
+                </div>
+                <div class="example-card card-hover card-fs" data-example-id="fs">
+                    <div class="card-icon">
+                        <img src="public\frontend.png" alt="Full Stack Developer icon"
+                             onerror="this.src='https://placehold.co/600x400/fefce8/eab308?text=Full+Stack'">
+                    </div>
+                    <div class="card-content">
+                        <div>
+                            <h4>Full Stack Developer</h4>
+                            <span class="card-badge">Node.js • React • MongoDB</span>
+                            <p>We need a Full Stack Developer proficient in Node.js, React, and MongoDB. You'll develop both frontend and backend features...</p>
+                        </div>
+                        <button>Try Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Form -->
+        <form class="input-form" id="jd-form">
+            <div class="form-box glass">
+                <div class="form-header">
+                    <i data-lucide="book-open" style="width: 1.5rem; height: 1.5rem;"></i>
+                    <label for="jd-input">Paste Your Job Description</label>
+                </div>
+                <textarea
+                    id="jd-input"
+                    placeholder="Paste the complete job description here... (minimum 50 characters)"
+                    required
+                ></textarea>
+                <div class="form-footer">
+                    <div class="form-status">
+                        <span class="char-count" id="char-count">0 characters</span>
+                        <div class="ready-badge hidden" id="ready-badge">
+                            <i data-lucide="award"></i>
+                            <span>Ready to generate</span>
+                        </div>
+                    </div>
+                    <button type="submit" id="generate-btn" disabled>
+                        <i data-lucide="zap" style="width: 1.25rem; height: 1.25rem;"></i>
+                        <span>Generate Learning Path</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Error Message Box -->
+        <div id="message-box" class="error hidden">
+            <!-- Content injected by JS -->
+        </div>
+        
+        <!-- Loader -->
+        <div id="loader" class="hidden">
+            <div class="spinner"></div>
+            <p>Analyzing JD and building your roadmap...<br>This may take a moment.</p>
+        </div>
+
+        <!-- Results -->
+        <div id="results-container" class="hidden">
+            <!-- Header -->
+            <div class="results-header">
+                <span class="context-badge" id="job-context-badge">🎯 Role Context: Frontend Developer</span>
+                <button class="icon-btn glass" title="Share">
+                    <i data-lucide="share-2" style="width: 1.25rem; height: 1.25rem;"></i>
+                </button>
+                <button class="icon-btn glass" title="Download">
+                    <i data-lucide="download" style="width: 1.25rem; height: 1.25rem;"></i>
+                </button>
+            </div>
+            
+            <!-- Skills Overview (Always visible) -->
+            <div class="result-box glass skills-overview">
+                <h3 class="box-title">
+                    <i data-lucide="book-open" style="width: 1.75rem; height: 1.75rem;"></i>
+                    Identified Skills
+                </h3>
+                <div id="skills-overview-content">
+                    <!-- Content injected by JS -->
+                </div>
+            </div>
+
+            <!-- *** UPDATED: Tab Navigation *** -->
+            <nav class="tabs-nav glass">
+                <button data-tab="roadmap" class="active">
+                    <i data-lucide="map"></i>
+                    <span>Roadmap</span>
+                </button>
+                <!-- *** NEW: Key Concepts Tab *** -->
+                <button data-tab="concepts">
+                    <i data-lucide="lightbulb"></i>
+                    <span>Key Concepts</span>
+                </button>
+                <button data-tab="projects">
+                    <i data-lucide="code"></i>
+                    <span>Project Ideas</span>
+                </button>
+                <button data-tab="interview">
+                    <i data-lucide="mic"></i>
+                    <span>Interview Prep</span>
+                </button>
+                <button data-tab="timeline">
+                    <i data-lucide="calendar"></i>
+                    <span>Timeline</span>
+                </button>
+                <button data-tab="difficulty">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Difficulty</span>
+                </button>
+            </nav>
+            
+            <!-- Tab Content Panels -->
+            <div id="tab-content">
+                <div id="roadmap-tab" class="tab-panel active">
+                    <h3 class="box-title" style="text-align: center; display: block; margin-bottom: 2rem;">
+                        🚀 Your Personalized Learning Roadmap
+                    </h3>
+                    <div id="roadmap-content">
+                        <!-- Content injected by JS -->
+                    </div>
+                </div>
+
+                <!-- *** NEW: Key Concepts Tab Panel *** -->
+                <div id="concepts-tab" class="tab-panel hidden">
+                    <div class="result-box glass">
+                        <h3 class="box-title">
+                            <i data-lucide="lightbulb" style="width: 1.75rem; height: 1.75rem;"></i>
+                            Key Concepts
+                        </h3>
+                        <div id="concepts-content">
+                            <!-- Content injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Ideas Tab -->
+                <div id="projects-tab" class="tab-panel hidden">
+                    <div class="result-box glass">
+                        <h3 class="box-title">
+                            <i data-lucide="code" style="width: 1.75rem; height: 1.75rem;"></i>
+                            Project Ideas
+                        </h3>
+                        <div id="projects-content">
+                            <!-- Content injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interview Prep Tab -->
+                <div id="interview-tab" class="tab-panel hidden">
+                    <div class="result-box glass">
+                        <h3 class="box-title">
+                            <i data-lucide="mic" style="width: 1.75rem; height: 1.75rem;"></i>
+                            Interview Prep
+                        </h3>
+                        <div id="interview-content">
+                            <!-- Content injected by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="timeline-tab" class="tab-panel hidden">
+                    <div class="result-box glass">
+                        <h3 class="box-title">
+                            <i data-lucide="calendar" style="width: 1.75rem; height: 1.75rem;"></i>
+                            Learning Timeline
+                        </h3>
+                        <div id="timeline-content">
+                            <!-- Content injected by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="difficulty-tab" class="tab-panel hidden">
+                    <div class="result-box glass">
+                        <h3 class="box-title">
+                            <i data-lucide="bar-chart-3" style="width: 1.75rem; height: 1.75rem;"></i>
+                            Skill Difficulty Heatmap
+                        </h3>
+                        <div id="difficulty-content">
+                            <!-- Content injected by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Summary Card (Always visible) -->
+            <div class="result-box glass summary-card">
+                <h3 class="box-title">
+                    <i data-lucide="star" style="width: 1.75rem; height: 1.75rem;"></i>
+                    Learning Summary
+                </h3>
+                <div class="summary-grid" id="summary-content">
+                    <!-- Content injected by JS -->
+                </div>
+                <p class="summary-text">
+                    This comprehensive learning roadmap provides a structured path based on semantic analysis of the job description. 
+                    Follow the sequence for optimal learning progression.
+                </p>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass">
+        <div class="container">
+            <div class="footer-logo">
+                <i data-lucide="sparkles" style="width: 1.25rem; height: 1.25rem;"></i>
+                <span>Built with Exa AI</span>
+            </div>
+            <p>Semantic Search Demo • Advanced Learning Path Generator</p>
+        </div>
+    </footer>
+
+
+    <script type="module">
+        // --- DOM Elements ---
+        const jdForm = document.getElementById('jd-form');
+        const generateBtn = document.getElementById('generate-btn');
+        const jdInput = document.getElementById('jd-input');
+        const charCountEl = document.getElementById('char-count');
+        const readyBadgeEl = document.getElementById('ready-badge');
+        const loader = document.getElementById('loader');
+        const resultsContainer = document.getElementById('results-container');
+        const messageBox = document.getElementById('message-box');
+        const exampleCards = document.querySelectorAll('.example-card');
+        const tabsNav = document.querySelector('.tabs-nav');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+        
+        // Result content holders
+        const jobContextBadge = document.getElementById('job-context-badge');
+        const skillsOverviewContent = document.getElementById('skills-overview-content');
+        const roadmapContent = document.getElementById('roadmap-content');
+        const timelineContent = document.getElementById('timeline-content');
+        const difficultyContent = document.getElementById('difficulty-content');
+        const summaryContent = document.getElementById('summary-content');
+        const projectsContent = document.getElementById('projects-content');
+        const interviewContent = document.getElementById('interview-content');
+        
+        // *** NEW: Key Concepts content holder ***
+        const conceptsContent = document.getElementById('concepts-content');
+
+
+        // --- App State ---
+        let currentResult = null;
+        let activeTab = 'roadmap';
+        let remainingSearches = 5;
+
+        // --- Example Job Data ---
+        const exampleJobs = {
+            ds: {
+                title: "Data Scientist",
+                description: "We're looking for a Data Scientist with experience in Python, machine learning, and SQL. You'll work on building predictive models, analyzing large datasets, and creating data visualizations. Responsibilities include data cleaning, feature engineering, and communicating insights to stakeholders. Familiarity with TensorFlow or PyTorch is a plus.",
+            },
+            fe: {
+                title: "Frontend Developer",
+                description: "Join our team as a Frontend Developer! You'll build responsive web applications using React, JavaScript, and TypeScript. Experience with HTML, CSS, and modern frontend frameworks is essential. You will collaborate with designers and backend engineers to create seamless user experiences. Knowledge of testing libraries like Jest or React Testing Library is preferred.",
+            },
+            fs: {
+                title: "Full Stack Developer",
+                description: "We need a Full Stack Developer proficient in Node.js, React, and MongoDB. You'll develop both frontend and backend features, work with REST APIs, and deploy applications on AWS. The ideal candidate is a problem-solver who can take ownership of features from concept to deployment. Experience with containerization (Docker, Kubernetes) is a bonus.",
+            }
+        };
+
+        // --- Event Listeners ---
+        
+        // Form submission
+        jdForm.addEventListener('submit', handleGenerateRoadmap);
+
+        // Textarea input
+        jdInput.addEventListener('input', () => {
+            const len = jdInput.value.length;
+            charCountEl.textContent = `${len} characters`;
+            if (len >= 50) {
+                generateBtn.disabled = false;
+                readyBadgeEl.classList.remove('hidden');
+            } else {
+                generateBtn.disabled = true;
+                readyBadgeEl.classList.add('hidden');
+            }
+        });
+
+        // Example card clicks
+        exampleCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const exampleId = card.dataset.exampleId;
+                loadExample(exampleJobs[exampleId]);
+            });
+        });
+        
+        // Tab navigation
+        tabsNav.addEventListener('click', (e) => {
+            const tabButton = e.target.closest('button');
+            if (!tabButton) return;
+            
+            const tabName = tabButton.dataset.tab;
+            if (tabName === activeTab) return;
+            
+            // Update button active state
+            tabsNav.querySelector('button.active').classList.remove('active');
+            tabButton.classList.add('active');
+            
+            // Show/hide content
+            tabPanels.forEach(panel => {
+                if (panel.id === `${tabName}-tab`) {
+                    panel.classList.remove('hidden');
+                } else {
+                    panel.classList.add('hidden');
+                }
+            });
+            
+            activeTab = tabName;
+        });
+
+        // *** NEW: Event listener for interactive content (like "Explain This") ***
+        // We listen on the whole results container
+        resultsContainer.addEventListener('click', async (e) => {
+            // Check if the clicked element is an explain button
+            const explainButton = e.target.closest('button.explain-btn');
+            if (explainButton) {
+                const skill = explainButton.dataset.skill;
+                await fetchExplanation(skill, explainButton);
+            }
+        });
+        
+        
+        // --- Core Functions ---
+
+        /**
+         * Loads an example job description into the textarea.
+         */
+        function loadExample(example) {
+            jdInput.value = example.description;
+            // Manually trigger the input event to update char count and button state
+            jdInput.dispatchEvent(new Event('input'));
+            resultsContainer.classList.add('hidden');
+            messageBox.classList.add('hidden');
+        }
+
+        /**
+         * Main function to handle the roadmap generation process.
+         */
+        async function handleGenerateRoadmap(e) {
+            e.preventDefault();
+            const jdText = jdInput.value.trim();
+
+            if (jdText.length < 50) {
+                showMessage("Please paste a job description (minimum 50 characters).", "error");
+                return;
+            }
+        
+
+            // 1. Reset UI
+            hideMessage();
+            resultsContainer.classList.add('hidden');
+            loader.classList.remove('hidden');
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = `
+                <div class="spinner"></div>
+                <span>Generating Path...</span>
+            `;
+
+            try {
+                // 2. Call Gemini to analyze skills and get the learning path
+                const analysisResult = await callGeminiForAnalysis(jdText);
+                
+                if (!analysisResult || !analysisResult.learningPath) {
+                    throw new Error("Could not analyze the job description. The response from the AI was not valid.");
+                }
+
+                // 3. *** UPDATED: Fetch 3 resource types for each skill sequentially ***
+                console.log("Fetching all Exa resources. This will take a moment...");
+                
+                const pathWithResources = [];
+                const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+                
+                for (const step of analysisResult.learningPath) {
+                    console.log(`Fetching 3 resource types for: ${step.skill}`);
+                    
+                    // Fetch all 3 resource types, one by one, with a delay
+                    const resources = await callExaAPI(step.skill, "tutorial");
+                    await delay(250); 
+                    
+                    const projects = await callExaAPI(step.skill, "project");
+                    await delay(250);
+                    
+                    const interviewQs = await callExaAPI(step.skill, "interview");
+                    await delay(250); // Delay before next skill
+
+                    // Add all fetched data to the step
+                    pathWithResources.push({
+                        ...step,
+                        resources,   // Tutorial resources
+                        projects,    // Project ideas
+                        interviewQs  // Interview questions
+                    });
+                }
+
+                analysisResult.learningPath = pathWithResources; // Update path with all new data
+                
+                currentResult = analysisResult; // Store for tab rendering
+                
+                // 4. Render all results (inc. new tabs)
+                renderResults(currentResult);
+
+                // 5. Show the final results
+                resultsContainer.classList.remove('hidden');
+                remainingSearches--;
+                document.getElementById('remaining-searches').textContent = `${remainingSearches} searches left`;
+                
+                // Scroll to results
+                resultsContainer.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error("Error during roadmap generation:", error);
+                showMessage(`An error occurred: ${error.message}. Please check the console.`, "error");
+            } finally {
+                // 6. Final UI cleanup
+                loader.classList.add('hidden');
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = `
+                    <i data-lucide="zap" style="width: 1.25rem; height: 1.25rem;"></i>
+                    <span>Generate Learning Path</span>
+                `;
+                lucide.createIcons(); // Re-render icons in button
+            }
+        }
+
+        /**
+         * Uses YOUR PROXY SERVER to analyze structured data from the raw JD text.
+         */
+        async function callGeminiForAnalysis(jdText) {
+            console.log("Calling YOUR server to analyze JD...");
+
+            const systemPrompt = `
+                You are an expert technical recruiter and career coach.
+                Analyze the following job description and extract:
+                1.  "jobContext": A brief, 2-5 word title for the role (e.g., "Senior Frontend Engineer").
+                2.  "categorizedSkills": An object grouping skills into categories (e.g., "Frontend", "Backend", "Database").
+                3.  "learningPath": A logically sequenced array of the *most important* skills to learn (max 7).
+                    For *each* skill in the path, provide:
+                    - "skill": The name of the skill.
+                    - "difficulty": "Easy", "Medium", or "Hard".
+                    - "description": A 1-2 sentence explanation for *why* it has that difficulty.
+                    - "pitfalls": An array of 2-3 common pitfalls for learners.
+
+                Return *only* a valid JSON object with this exact structure:
+                {
+                  "jobContext": "Senior React Developer",
+                  "categorizedSkills": {
+                    "Frontend": ["React", "TypeScript", "JavaScript"],
+                    "Tools": ["Git", "Webpack"]
+                  },
+                  "learningPath": [
+                    { 
+                      "skill": "React",
+                      "difficulty": "Medium",
+                      "description": "React is foundational for this role. It's 'Medium' because while easy to start, mastering state management and hooks takes time.",
+                      "pitfalls": ["'Tutorial hell' - watching without building.", "Not understanding the 'why' behind hooks.", "Confusing state and props."]
+                    },
+                    { 
+                      "skill": "TypeScript",
+                      "difficulty": "Medium",
+                      "description": "TypeScript adds static typing. It's 'Medium' as it requires learning a new syntax and type-thinking, which can be tricky.",
+                      "pitfalls": ["Using 'any' everywhere.", "Over-complicating types.", "Fighting the compiler instead of understanding it."]
+                    },
+                    { 
+                      "skill": "Machine Learning",
+                      "difficulty": "Hard",
+                      "description": "This is a complex field involving statistics, data modeling, and abstract concepts. Mastery requires significant time.",
+                      "pitfalls": ["Focusing on theory without projects.", "Not understanding the prerequisite math.", "Using models as 'black boxes'."]
+                    }
+                  ]
+                }
+            `;
+
+            // Call your own server's endpoint
+            const data = await fetchWithRetry('http://localhost:3000/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ jdText: jdText, systemPrompt: systemPrompt })
+            });
+
+            // The rest of the logic is the same!
+            const text = data.candidates[0].content.parts[0].text;
+            console.log("Gemini JSON Response:", text);
+            return JSON.parse(text);
+        }
+
+        /**
+         * Calls the proxy server to fetch Exa search results.
+         */
+        async function callExaAPI(skill, searchType = 'tutorial') {
+            console.log(`🚀 CALLING YOUR PROXY SERVER for skill: "${skill}" [${searchType}]`);
+            
+            try {
+                // Call your own server's /api/search endpoint
+                const response = await fetch('http://localhost:3000/api/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    // Send the skill AND the search type
+                    body: JSON.stringify({ 
+                        skill: skill,
+                        searchType: searchType 
+                    }) 
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    throw new Error(`Your server error! Status: ${response.status}. Body: ${errorBody}`);
+                }
+
+                const data = await response.json();
+                console.log(`Exa response for "${skill}" [${searchType}]:`, data.results.length);
+
+                if (!data.results || data.results.length === 0) {
+                    console.warn(`No Exa results found for "${skill}" [${searchType}]`);
+                    return [];
+                }
+                
+                // Format Exa's response
+                return data.results.map(result => ({
+                    title: result.title || "No title found",
+                    url: result.url,
+                    snippet: result.text || "No snippet available."
+                }));
+
+            } catch (error) {
+                console.error(`Error calling your proxy server for skill ${skill} [${searchType}]:`, error);
+                return []; 
+            }
+        }
+        
+        /**
+         * --- (NEW) On-demand function to fetch a synthesized explanation ---
+         */
+        async function fetchExplanation(skill, buttonElement) {
+            console.log(`Fetching explanation for ${skill}...`);
+            
+            // 1. Set loading state
+            buttonElement.disabled = true;
+            buttonElement.innerHTML = `<div class="spinner"></div> <span>Explaining...</span>`;
+            
+            // Find the container for the answer
+            const conceptBody = buttonElement.closest('.concept-item').querySelector('.concept-body');
+            if (!conceptBody) return; // Should not happen
+            
+            conceptBody.innerHTML = ''; // Clear old content
+            
+            try {
+                // 2. Call the new /api/explain endpoint
+                const response = await fetch('http://localhost:3000/api/explain', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ skill: skill })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP ${response.status} error`);
+                }
+
+                const data = await response.json();
+                
+                // 3. Display the explanation
+                conceptBody.innerHTML = `<p>${data.explanation}</p>`;
+                
+                // 4. Remove the button
+                buttonElement.remove();
+                
+            } catch (error) {
+                console.error(`Error fetching explanation for ${skill}:`, error);
+                // Show error in the concept body
+                conceptBody.innerHTML = `<p class="error">Sorry, I couldn't generate an explanation for this. Error: ${error.message}</p>`;
+                // Reset button
+                buttonElement.disabled = false;
+                buttonElement.innerHTML = `<i data-lucide="lightbulb"></i> <span>Explain This</span>`;
+                lucide.createIcons();
+            }
+        }
+        
+
+        // --- Helper Functions ---
+
+        function getResourceType(title, url) {
+            const lowerTitle = title.toLowerCase();
+            const lowerUrl = url.toLowerCase();
+            if (lowerTitle.includes('video') || lowerUrl.includes('youtube.com')) return { emoji: '🎥', label: 'Video' };
+            if (lowerTitle.includes('course') || lowerUrl.includes('udemy.com') || lowerUrl.includes('coursera.org')) return { emoji: '🎓', label: 'Course' };
+            if (lowerTitle.includes('blog') || lowerTitle.includes('article') || lowerUrl.includes('dev.to') || lowerUrl.includes('medium.com')) return { emoji: '📝', label: 'Article' };
+            if (lowerUrl.includes('github.com')) return { emoji: '💻', label: 'Code' };
+            if (lowerTitle.includes('documentation') || lowerTitle.includes('docs') || lowerTitle.includes('handbook')) return { emoji: '📚', label: 'Docs' };
+            return { emoji: '🔗', label: 'Resource' };
+        }
+
+        function calculateSkillLevel(index, total) {
+            return Math.ceil(((index + 1) / total) * 100);
+        }
+
+        function getEstimatedWeeks(skillCount) {
+            const baseWeeks = 2;
+            return baseWeeks + (skillCount - 1) * 1.5;
+        }
+
+        function getDifficultyHelpers(difficultyLevel) {
+            const level = (difficultyLevel || "easy").toLowerCase();
+            
+            if (level === 'hard') {
+                return { badge: 'badge-hard', fill: 'fill-hard', value: 90 };
+            }
+            if (level === 'medium') {
+                return { badge: 'badge-medium', fill: 'fill-medium', value: 50 };
+            }
+            // Default to easy
+            return { badge: 'badge-easy', fill: 'fill-easy', value: 30 };
+        }
+        
+        function getHostname(url) {
+            try {
+                return new URL(url).hostname.replace('www.', '');
+            } catch (e) {
+                return url;
+            }
+        }
+
+        // --- Main Rendering Functions ---
+        
+        /**
+         * Main function to populate all result sections
+         */
+        function renderResults(data) {
+            // Reset content
+            skillsOverviewContent.innerHTML = "";
+            roadmapContent.innerHTML = "";
+            timelineContent.innerHTML = "";
+            difficultyContent.innerHTML = "";
+            summaryContent.innerHTML = "";
+            projectsContent.innerHTML = "";
+            interviewContent.innerHTML = "";
+            // *** NEW: Reset concepts tab ***
+            conceptsContent.innerHTML = "";
+            
+            // Render Header
+            jobContextBadge.textContent = `🎯 Role Context: ${data.jobContext}`;
+            
+            // Render Skills Overview
+            renderSkillsOverview(data.categorizedSkills);
+            
+            // Render Tabs
+            renderRoadmapTab(data.learningPath);
+            renderTimelineTab(data.learningPath);
+            renderDifficultyTab(data.learningPath); 
+            renderProjectsTab(data.learningPath);
+            renderInterviewTab(data.learningPath);
+            // *** NEW: Render concepts tab ***
+            renderKeyConceptsTab(data.learningPath);
+            
+            // Render Summary
+            renderSummaryCard(data.learningPath);
+            
+            // Re-render all icons
+            lucide.createIcons();
+        }
+        
+        function renderSkillsOverview(categories) {
+            if (Object.keys(categories).length === 0) {
+                skillsOverviewContent.innerHTML = `<p class="empty-state">No skills were identified.</p>`;
+                return;
+            }
+            
+            let html = "";
+            for (const [category, skills] of Object.entries(categories)) {
+                html += `
+                    <div class="category">
+                        <h4>${category}</h4>
+                        <div class="skills-list">
+                            ${skills.map(skill => `<span class="skill-badge">${skill}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            skillsOverviewContent.innerHTML = html;
+        }
+        
+        function renderRoadmapTab(path) {
+            if (path.length === 0) {
+                roadmapContent.innerHTML = `<div class="empty-state"><i data-lucide="search"></i><p>No learning path could be generated.</p></div>`;
+                return;
+            }
+            
+            let html = "";
+            path.forEach((step, index) => {
+                const level = calculateSkillLevel(index, path.length);
+                html += `
+                    <div class="roadmap-step glass">
+                        <div class="roadmap-step-header">
+                            <div class="step-number"><span>${index + 1}</span></div>
+                            <div class="step-title">
+                                <h4>${step.skill}</h4>
+                                <p>Level: ${level}% Progress</p>
+                            </div>
+                            <div class="step-icon">
+                                <i data-lucide="book-open"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-labels">
+                                <span>Learning Progress</span>
+                                <span class="percent">${level}%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width: ${level}%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="resources-list">
+                            <h5>📚 Recommended Tutorials:</h5>
+                            ${step.resources && step.resources.length > 0 ? step.resources.map(res => {
+                                const type = getResourceType(res.title, res.url);
+                                const host = getHostname(res.url);
+                                return `
+                                    <div class="resource-card">
+                                        <div class="resource-icon">${type.emoji}</div>
+                                        <div class="resource-details">
+                                            <h6>${res.title}</h6>
+                                            <div class="resource-tags">
+                                                <span class="tag tag-type">${type.label}</span>
+                                                <span class="tag tag-host">${host}</span>
+                                            </div>
+                                        </div>
+                                        <a href="${res.url}" target="_blank" rel="noopener noreferrer" class="resource-action">Visit</a>
+                                    </div>
+                                `;
+                            }).join('') : `<div class="empty-state" style="padding: 1rem 0;"><p>No tutorials found for this skill.</p></div>`}
+                        </div>
+                    </div>
+                `;
+                
+                if (index < path.length - 1) {
+                    html += `
+                        <div class="step-connector">
+                            <div class="connector-icon">
+                                <i data-lucide="arrow-down" style="width: 1rem; height: 1rem; color: white;"></i>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            roadmapContent.innerHTML = html;
+        }
+
+        /**
+         * --- (NEW) Renders the interactive "Key Concepts" tab ---
+         */
+        function renderKeyConceptsTab(path) {
+            let html = "";
+            if (path.length === 0) {
+                conceptsContent.innerHTML = `<div class="empty-state"><i data-lucide="search"></i><p>No learning path found.</p></div>`;
+                return;
+            }
+            
+            path.forEach(step => {
+                html += `
+                    <div class="concept-item">
+                        <div class="concept-header">
+                            <h4>${step.skill}</h4>
+                            <button class="explain-btn" data-skill="${step.skill}">
+                                <i data-lucide="lightbulb"></i>
+                                <span>Explain This</span>
+                            </button>
+                        </div>
+                        <div class="concept-body hidden">
+                            <!-- Explanation will be injected here -->
+                        </div>
+                    </div>
+                `;
+            });
+            conceptsContent.innerHTML = html;
+            // Add a listener to show the body when the button is clicked
+            conceptsContent.querySelectorAll('.explain-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                     const body = button.closest('.concept-item').querySelector('.concept-body');
+                     body.classList.remove('hidden');
+                }, { once: true }); // Only run this once to open the panel
+            });
+        }
+
+        // Render function for Project Ideas
+        function renderProjectsTab(path) {
+            let html = "";
+            if (path.length === 0) {
+                projectsContent.innerHTML = `<div class="empty-state"><i data-lucide="search"></i><p>No learning path found.</p></div>`;
+                return;
+            }
+            
+            path.forEach(step => {
+                html += `
+                    <div class="info-card">
+                        <div class="info-card-icon icon-project">
+                            <i data-lucide="code"></i>
+                        </div>
+                        <div class="info-card-details">
+                            <h4>${step.skill}</h4>
+                            ${step.projects && step.projects.length > 0 ? 
+                                step.projects.map(res => {
+                                    const host = getHostname(res.url);
+                                    return `
+                                    <a href="${res.url}" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                        <div class="link-details">
+                                            <h6>${res.title}</h6>
+                                            <p class="link-host">${host}</p>
+                                        </div>
+                                        <div class="link-action">
+                                            <i data-lucide="arrow-right"></i>
+                                        </div>
+                                    </a>
+                                    `;
+                                }).join('') : 
+                                `<div class="empty-state" style="padding: 1rem 0; text-align: left;"><p>No project ideas found for this skill.</p></div>`
+                            }
+                        </div>
+                    </div>
+                `;
+            });
+            projectsContent.innerHTML = html;
+        }
+
+        // Render function for Interview Prep
+        function renderInterviewTab(path) {
+            let html = "";
+            if (path.length === 0) {
+                interviewContent.innerHTML = `<div class="empty-state"><i data-lucide="search"></i><p>No learning path found.</p></div>`;
+                return;
+            }
+            
+            path.forEach(step => {
+                html += `
+                    <div class="info-card">
+                        <div class="info-card-icon icon-interview">
+                            <i data-lucide="mic"></i>
+                        </div>
+                        <div class="info-card-details">
+                            <h4>${step.skill}</h4>
+                            ${step.interviewQs && step.interviewQs.length > 0 ? 
+                                step.interviewQs.map(res => {
+                                    const host = getHostname(res.url);
+                                    return `
+                                    <a href="${res.url}" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                        <div class="link-details">
+                                            <h6>${res.title}</h6>
+                                            <p class="link-host">${host}</p>
+                                        </div>
+                                        <div class="link-action">
+                                            <i data-lucide="arrow-right"></i>
+                                        </div>
+                                    </a>
+                                    `;
+                                }).join('') : 
+                                `<div class="empty-state" style="padding: 1rem 0; text-align: left;"><p>No interview resources found for this skill.</p></div>`
+                            }
+                        </div>
+                    </div>
+                `;
+            });
+            interviewContent.innerHTML = html;
+        }
+        
+        function renderTimelineTab(path) {
+            let html = "";
+            const totalWeeks = getEstimatedWeeks(path.length);
+            let currentWeek = 0;
+            
+            path.forEach((step, index) => {
+                const duration = 1.5; // Simplified from logic
+                const weekStart = Math.floor(currentWeek) + 1;
+                const weekEnd = Math.floor(currentWeek + duration) + 1;
+                currentWeek += duration;
+                
+                html += `
+                    <div class="timeline-item">
+                        <div class="timeline-header">
+                            <div class="timeline-title">
+                                <span class="skill">${step.skill}</span>
+                                <span class="weeks">Week ${weekStart}-${weekEnd}</span>
+                            </div>
+                            <span class="timeline-duration">${duration * 1} weeks</span>
+                        </div>
+                        <div class="timeline-track">
+                            <div class="timeline-fill" style="margin-left: ${(weekStart-1) / totalWeeks * 100}%; width: ${(duration / totalWeeks) * 100}%;"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div class="timeline-summary">
+                    <p>⏱️ Total Estimated Time: <span>${Math.round(totalWeeks)} weeks</span></p>
+                </div>
+            `;
+            timelineContent.innerHTML = html;
+        }
+
+        function renderDifficultyTab(path) {
+            let html = "";
+            path.forEach(step => {
+                // Use the new helper function to get CSS classes from the API string
+                const helpers = getDifficultyHelpers(step.difficulty);
+                
+                html += `
+                    <div class="difficulty-item">
+                        <div class="difficulty-header">
+                            <span class="skill">${step.skill}</span>
+                            <span class="badge ${helpers.badge}">${step.difficulty || 'N/A'}</span>
+                        </div>
+                        <div class="difficulty-track">
+                            <div class="difficulty-fill ${helpers.fill}" style="width: ${helpers.value}%;"></div>
+                        </div>
+                        <div class="difficulty-details">
+                            <h5>Why this difficulty?</h5>
+                            <p>${step.description || 'No description provided.'}</p>
+                            <h5>Common Pitfalls:</h5>
+                            <ul>
+                                ${step.pitfalls && step.pitfalls.length > 0 ? 
+                                    step.pitfalls.map(pitfall => `<li>${pitfall}</li>`).join('') : 
+                                    '<li>No pitfalls provided.</li>'}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            });
+            difficultyContent.innerHTML = html;
+        }
+        
+        function renderSummaryCard(path) {
+            const totalSkills = path.length;
+            
+            // *** UPDATED: Summary count ***
+            const totalResources = path.reduce((sum, step) => {
+                return sum + 
+                       (step.resources ? step.resources.length : 0) +
+                       (step.projects ? step.projects.length : 0) +
+                       (step.interviewQs ? step.interviewQs.length : 0);
+            }, 0);
+            
+            const totalWeeks = Math.round(getEstimatedWeeks(path.length));
+            
+            summaryContent.innerHTML = `
+                <div class="summary-item">
+                    <p class="value value-skills">${totalSkills}</p>
+                    <p class="label">Skills to Master</p>
+                </div>
+                <div class="summary-item">
+                    <p class="value value-resources">${totalResources}</p>
+                    <p class="label">Total Resources</p>
+                </div>
+                <div class="summary-item">
+                    <p class="value value-weeks">${totalWeeks}</p>
+                    <p class="label">Weeks Estimated</p>
+                </div>
+            `;
+        }
+
+        // --- Utility Functions ---
+
+        /**
+         * Shows a message in the message box.
+         */
+        function showMessage(message, type = "error") {
+             messageBox.innerHTML = `
+                <i data-lucide="alert-circle"></i>
+                <div>
+                    <h3>Something went wrong</h3>
+                    <p>${message}</p>
+                </div>
+             `;
+             messageBox.className = type; // e.g., "error"
+             messageBox.classList.remove('hidden');
+             lucide.createIcons(); // Render the icon
+        }
+
+        /**
+         * Hides the message box.
+         */
+        function hideMessage() {
+            messageBox.classList.add('hidden');
+            messageBox.innerHTML = "";
+        }
+        
+        /**
+         * A utility function to fetch with exponential backoff retry.
+         */
+        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error("API Error Response:", errorText);
+                        // Check for 503 Service Unavailable or other retryable errors
+                        if (response.status === 503 || response.status === 429) {
+                             throw new Error(`Service unavailable/overloaded (HTTP ${response.status}). Retrying...`);
+                        }
+                        const errorData = JSON.parse(errorText); // Try to parse
+                        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.warn(`Attempt ${i + 1} failed: ${error.message}. Retrying in ${delay}ms...`);
+                    if (i < retries - 1) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; // Exponential backoff
+                    } else {
+                        throw error; // Last attempt failed, throw the error
+                    }
+                }
+            }
+        }
+        
+        // --- Initial Load ---
+        lucide.createIcons();
+
+    </script>
+</body>
+</html>
+
