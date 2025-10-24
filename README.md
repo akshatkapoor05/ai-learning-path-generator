@@ -6,6 +6,25 @@ It goes beyond simple lists by using a novel, multi-API approach:
 2. Exa AI's Search API finds the most relevant tutorials, project ideas, and interview questions for each step.
 3. Exa AI's Get Contents API + Gemini work together to provide on-demand, synthesized explanations of key concepts, creating an interactive learning tool instead of just a list of links.
 
+<img width="1915" height="869" alt="image" src="https://github.com/user-attachments/assets/2a8ca9d7-0fad-4139-8db1-9391053601a3" />
+
+<img width="1864" height="754" alt="image" src="https://github.com/user-attachments/assets/df33541a-d377-4e67-838b-3b9e39f83aaa" />
+
+<img width="1880" height="770" alt="image" src="https://github.com/user-attachments/assets/8e4f9dd1-9326-4d42-a6b6-a81507fdd223" />
+
+<img width="1848" height="716" alt="image" src="https://github.com/user-attachments/assets/acc00e33-4485-42ef-9ed7-643c4cf57b9d" />
+
+<img width="1448" height="771" alt="image" src="https://github.com/user-attachments/assets/09003e2e-c53d-4e54-86cc-bfbafc1f9f48" />
+
+<img width="1339" height="776" alt="image" src="https://github.com/user-attachments/assets/d55abf94-b61d-4d83-ab4f-6a4a08883c18" />
+
+<img width="1399" height="681" alt="image" src="https://github.com/user-attachments/assets/2c91dbaa-a94d-49a6-b57c-83f18fd8bea0" />
+
+<img width="1366" height="785" alt="image" src="https://github.com/user-attachments/assets/7453fd12-351a-4d92-8d7d-6b542890b294" />
+
+<img width="1335" height="776" alt="image" src="https://github.com/user-attachments/assets/5bb54888-8763-4609-a803-5e940abbd17b" />
+
+
 # Core Features
 1. Smart JD Analysis: Paste any job description and instantly get a prioritized, step-by-step learning path.
 2. Comprehensive Resources: Gathers links for:
@@ -77,3 +96,4 @@ node_modules/
 6. Run the server:node server.js
 
 Your server will start, usually on http://localhost:3000.7. Open the app:You can now open the index.html file directly in your browser. It will automatically connect to your local server.
+
